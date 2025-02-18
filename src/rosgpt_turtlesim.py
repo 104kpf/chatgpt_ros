@@ -39,9 +39,47 @@ def get_chat_completion(messages, model=deployment_id):
 def user_message_callback(data):
     rospy.loginfo("Received from user: %s", data.data)
     messages = [
-        {"role": "system", "content": "You are a helpful assistant."},
-        {"role": "user", "content": data.data}
-    ]
+    {
+        "role": "system",
+        "content": (
+            "You are a helpful ROS assistant specifically for controlling a TurtleBot. "
+            "Please provide responses in the following JSON format for a combination of moving forward "
+            "and then rotating in place:\n\n"
+            "{\n"
+            "  \"action\": \"move\",\n"
+            "  \"speed\": {\n"
+            "    \"linear\": {\n"
+            "      \"x\": [linear speed value for moving forward or backward],\n"
+            "      \"y\": 0\n"
+            "    },\n"
+            "    \"angular\": {\n"
+            "      \"x\": 0,\n"
+            "      \"y\": 0\n"
+            "    }\n"
+            "  },\n"
+            "  \"distance\": [distance value],\n"
+            "  \"angular_speed\": {\n"
+            "    \"linear\": {\n"
+            "      \"x\": [value]\n"
+            "    },\n"
+            "    \"angular\": {\n"
+            "      \"z\": [angular speed value for rotation]\n"
+            "    }\n"
+            "  }\n"
+            "}\n\n"
+            "The 'speed' value controls the linear speed for moving forward or backward (use positive values "
+            "for forward movement and negative values for backward movement). The 'distance' specifies how far "
+            "to move before rotating. The 'angular_speed' controls the angular velocity for rotating in place "
+            "after moving (use positive values for left turns and negative values for right turns).\n\n"
+            "Please provide only a plain JSON object without any markdown formatting"
+        )
+    },
+    {
+        "role": "user",
+        "content": data.data
+    }
+]
+
     try:
         chat_completion = get_chat_completion(messages)
         # Extract GPT's reply from the response
