@@ -13,7 +13,6 @@ def callback(data):
     
     try:
         command = json.loads(data.data)
-        print(command)
         handle_action(command)
     except json.JSONDecodeError as e:
         rospy.logerr("Error decoding JSON: %s", e)
@@ -25,40 +24,51 @@ def handle_action(command):
     twist = Twist()
     rotations = command["rotations"]
     current_rot = 0
-    print(rotations)
     twist.linear.x = 0
-    # for current_rot in rotations:
-    #     rospy.loginfo("Moving turtle")
-    #     twist.linear.x = command["speed"]
-    #     twist.linear.y = 0
-    #     pub.publish(twist)
-    #     time_to_move = command["side_length"] / command["speed"]
-    #     rospy.sleep(time_to_move)
-    #     twist.linear.x = 0
+    while current_rot < rotations:
+        move_line(command,twist)
+        rotate(twist)
+        current_rot += 0.25
         
-    #     angular_speed = 2
-    #     pub.publish(twist)
-    #     rospy.loginfo("Rotating turtle")
-        
-    #     t0 = rospy.Time.now().to_sec()
-    #     ang_travelled = 0
-    #     while(ang_travelled < 3.141592/2):
-    #         twist.angular.z = angular_speed
-    #         t1 = rospy.Time.now().to_sec()
-    #         ang_travelled = angular_speed*(t1-t0)
-        
-    #     pub.publish(twist)
-    #     twist.angular.z = 0
-    #     current_rot += 0.25
+def rotate(twist):
+    rospy.loginfo("Rotating turtle")
+    angular_speed = 5
+    t0 = rospy.Time.now().to_sec()
+    ang_travelled = 0
+    while(ang_travelled < 3.141592/2):
+        twist.linear.x = 0
+        twist.angular.z = angular_speed
+        pub.publish(twist)
+        t1 = rospy.Time.now().to_sec()
+        ang_travelled = angular_speed*(t1-t0)
+    
+    twist.angular.z = 0
+    pub.publish(twist)
+
+
+def move_line(command,twist):
+    rospy.loginfo("Moving turtle")
+    twist.linear.x = command["speed"]
+    twist.linear.y = 0
+    t0 = rospy.Time.now().to_sec()
+    dist_travelled = 0
+    while(dist_travelled < command["side_length"]):
+        pub.publish(twist)
+        t1 = rospy.Time.now().to_sec()
+        dist_travelled = command["speed"]*(t1-t0)
+    
+    twist.angular.z = 0
+    pub.publish(twist)
+
 
 
 
 def listener():
     global pub
     rospy.init_node('control_listener', anonymous=True)
-    # 初始化发布者
+    
     pub = rospy.Publisher('/turtle1/cmd_vel', Twist, queue_size=10)
-    # 订阅 gpt_reply_to_user 话题
+    
     rospy.Subscriber("gpt_reply_to_user", String, callback)
     rospy.spin()
 

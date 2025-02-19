@@ -49,6 +49,7 @@ def user_message_callback(data):
             "請只回傳一個純 JSON 物件，不要附加任何文字或 markdown 格式。\n\n"
             "例如，如果正方形邊長為 2 公尺、速度為 3 單位/秒，且只繞行 1 次，則應回傳：\n"
             "{\"side_length\": 2, \"speed\": 3, \"rotations\": 1}"
+            "若無定義速度,邊長,繞行次數,請隨意挑選數字"
         )
     },
     {
