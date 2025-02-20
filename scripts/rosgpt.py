@@ -7,7 +7,7 @@ import httpx
 # OpenAI (Azure) Configuration
 # =======================
 # Replace these values with your own settings.
-api_key = "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"  # Your API key
+api_key = "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"  # Your API key
 api_base = "https://models.inference.ai.azure.com"  # Your Azure endpoint
 deployment_id = "gpt-4o"  # Your deployment/model name
 api_version = "2023-03-15-preview"  # API version
