@@ -5,6 +5,7 @@ import json
 import rospy
 from std_msgs.msg import String
 from geometry_msgs.msg import Twist
+import math
 
 pub = None
 
@@ -32,10 +33,10 @@ def handle_action(command):
         
 def rotate(twist):
     rospy.loginfo("Rotating turtle")
-    angular_speed = 5
+    angular_speed = 1
     t0 = rospy.Time.now().to_sec()
     ang_travelled = 0
-    while(ang_travelled < 3.141592/2):
+    while(ang_travelled < math.pi/2):
         twist.linear.x = 0
         twist.angular.z = angular_speed
         pub.publish(twist)
@@ -50,13 +51,16 @@ def move_line(command,twist):
     rospy.loginfo("Moving turtle")
     twist.linear.x = command["speed"]
     twist.linear.y = 0
+    twist.linear.z = 0
+    twist.angular.x = 0
+    twist.angular.y = 0
+    twist.angular.z = 0
     t0 = rospy.Time.now().to_sec()
     dist_travelled = 0
     while(dist_travelled < command["side_length"]):
         pub.publish(twist)
         t1 = rospy.Time.now().to_sec()
         dist_travelled = command["speed"]*(t1-t0)
-    
     twist.angular.z = 0
     pub.publish(twist)
 
