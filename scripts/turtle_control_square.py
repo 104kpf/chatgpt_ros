@@ -14,7 +14,9 @@ def callback(data):
     
     try:
         command = json.loads(data.data)
-        handle_action(command)
+        while command["stop"]==0:
+            handle_action(command)
+        
     except json.JSONDecodeError as e:
         rospy.logerr("Error decoding JSON: %s", e)
     except KeyError as e:

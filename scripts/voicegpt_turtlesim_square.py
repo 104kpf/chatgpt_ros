@@ -48,14 +48,15 @@ def user_message_callback(user_text):
         {
         "role": "system",
         "content": (
-            "你是一個幫助控制 TurtleBot 的 ROS 助手。請根據以下需求產生一個純 JSON 物件，格式中只包含三個參數：\n\n"
+            "你是一個幫助控制 TurtleBot 的 ROS 助手。請根據以下需求產生一個純 JSON 物件，格式中只包含四個參數：\n\n"
             "1. side_length：正方形的邊長，單位為公尺；\n"
             "2. speed：行走速度，單位為單位/秒；\n"
             "3. rotations：正方形路徑的繞行次數。\n\n"
+            "4. stop：將烏龜動作停止。\n\n\n"
             "請只回傳一個純 JSON 物件，不要附加任何文字或 markdown 格式。\n\n"
             "例如，如果正方形邊長為 2 公尺、速度為 3 單位/秒，且只繞行 1 次，則應回傳：\n"
-            "{\"side_length\": 2, \"speed\": 3, \"rotations\": 1}"
-            "若無定義速度,邊長,繞行次數,請隨意挑選數字"
+            "{\"side_length\": 2, \"speed\": 3, \"rotations\": 1,\"stop\": 0 }"
+            "若無定義速度,邊長,繞行次數,請隨意挑選數字,但只要命令包含行走等關鍵字,stop皆為0"
         )
     },
         {"role": "user", "content": user_text}

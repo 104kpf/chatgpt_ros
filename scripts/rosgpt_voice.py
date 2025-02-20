@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 import speech_recognition as sr
 import rospy
 from std_msgs.msg import String
