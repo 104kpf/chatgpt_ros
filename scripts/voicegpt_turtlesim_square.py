@@ -82,7 +82,7 @@ def speech_recognition_loop():
                 audio = recognizer.listen(source)
             try:
                 # Use Sphinx for offline speech recognition (alternatively, you can use Google Speech API, etc.)
-                recognized_text  = r.recognize_google(audio, language="en-US")
+                recognized_text  = r.recognize_google(audio, language="zh-CN")
                 rospy.loginfo("Recognized text: %s", recognized_text)
                 user_message_callback(recognized_text)
             except sr.UnknownValueError:

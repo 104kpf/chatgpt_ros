@@ -10,11 +10,16 @@ import math
 pub = None
 
 def callback(data):
+    global stop_flag
     rospy.loginfo("Received: %s", data.data)
     
     try:
         command = json.loads(data.data)
-        while command["stop"]==0:
+        if command.get("stop", 0) == 1:
+            stop_flag = True
+            stop_turtle()  
+        else:
+            stop_flag = False
             handle_action(command)
         
     except json.JSONDecodeError as e:
@@ -66,7 +71,17 @@ def move_line(command,twist):
     twist.angular.z = 0
     pub.publish(twist)
 
-
+def stop_turtle():
+    global pub
+    rospy.loginfo("Stopping turtle")
+    twist = Twist()
+    twist.linear.x = 0
+    twist.linear.y = 0
+    twist.linear.z = 0
+    twist.angular.x = 0
+    twist.angular.y = 0
+    twist.angular.z = 0
+    pub.publish(twist)
 
 
 def listener():
